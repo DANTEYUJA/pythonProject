@@ -1,0 +1,141 @@
+#coding:utf-8
+1、类的 name 属性 指定 用例名
+
+如果没有name 属性，那么类名就会被当做是用例名称
+
+类的 teststeps 方法 对应 测试步骤 代码
+
+测试步骤代码 就是自动化地 一步步执行测试用例 的程序。
+
+所以一个类 必须要有 teststeps 方法，才会被 hytest 当做是一个测试用例类。
+
+比如
+
+# 建议：类名 对应 用例编号
+class UI_0101:
+    # 测试用例名字，也建议以用例编号结尾，方便 和 用例文档对应
+    # 也方便后面 根据用例名称 挑选执行
+    name = '管理员首页 - UI-0101'
+
+    # 测试用例步骤
+    def teststeps(self):
+
+2、STEP 库函数
+
+用来声明每个测试步骤，这样日志报告更清晰
+
+INFO 库函数
+
+用来打印一些信息在日志和报告中，方便出现问题时定位。
+
+当然，如果你在开发调试阶段也可以直接使用print，在终端查看内容
+
+CHECK_POINT 函数
+
+用来声明测试过程中的每个检查点，任何一个检查点不通过，整个测试用例就被认为不通过。
+
+3、如果我们把鼠标放在上边，就会弹出 下面的 糯米、音乐、图片 等图标。
+
+使用 ActionChains 来 模拟鼠标移动 操作的代码如下：
+
+from selenium import webdriver
+
+driver = webdriver.Chrome(r'f:\chromedriver.exe')
+driver.implicitly_wait(5)
+
+driver.get('https://www.baidu.com/')
+
+from selenium.webdriver.common.action_chains import ActionChains
+
+ac = ActionChains(driver)
+
+# 鼠标移动到 元素上
+ac.move_to_element(
+    driver.find_element_by_css_selector('[name="tj_briicon"]')
+).perform()
+
+4、select_by_visible_text
+根据选项的 可见文本 ，选择元素。
+
+比如，下面的HTML，
+
+<option value="foo">Bar</option>
+就可以根据 Bar 这个内容，选择该选项
+
+s.select_by_visible_text('Bar')
+
+5、一般时间控件是有readonely属性，这里我们可以采用执行js脚本，去掉input标签中的readonly属性，这个时候就可以直接输入时间，send_keys（）。
+https://upload-images.jianshu.io/upload_images/5397377-0e46c62a4b07cfa3.png?imageMogr2/auto-orient/strip|imageView2/2/format/webp
+
+js = document.getElementById().removeAttribute("readonly")
+driver.execute_script(js)
+
+6/driver.find_element_by_css_selector(“input#username”).clear() #清空输入框内的提示信息，
+例如用户名，密码等提示信息，如果直接输入内容，可能会与输入框的默认提示信息拼接，从而造成输入信息的错误，
+这是clear（）将会变得非常有用
+
+7.Select类 提供了如下的方法
+
+select_by_value
+根据选项的 value属性值 ，选择元素。
+
+比如，下面的HTML，
+
+<option value="foo">Bar</option>
+就可以根据 foo 这个值选择该选项，
+
+s.select_by_value('foo')
+
+select_by_index
+根据选项的 次序 （从0开始），选择元素
+
+
+select_by_visible_text
+根据选项的 可见文本 ，选择元素。
+
+比如，下面的HTML，
+
+<option value="foo">Bar</option>
+就可以根据 Bar 这个内容，选择该选项
+
+s.select_by_visible_text('Bar')
+
+deselect_by_value
+根据选项的value属性值， 去除 选中元素
+
+
+deselect_by_index
+根据选项的次序，去除 选中元素
+
+
+deselect_by_visible_text
+根据选项的可见文本，去除 选中元素
+
+deselect_all
+
+
+8.# 初始化（英文叫 setup 方法）操作
+# 与初始化正好相反的操作就是 清除（teardown方法 ）。
+# 谁做的初始化操作对环境产生了 什么改变 ， 谁 就应该在 清除 操作里面做什么样的 还原 。
+hytest 执行用例时
+
+先执行 setup 里面的代码
+
+再执行 teststeps 里面的代码
+
+最后再执行 teardown 里面的代码。
+
+而且
+
+如果 setup 执行失败（有异常）， 就不会再执行 teststeps 和 teardown 里面的代码了。
+
+如果 teststeps 执行失败， 仍然会执行 teardown ， 确保环境被 清除
+
+9.滚动页面的方法：
+window.scrollBy(0,500)　　   向下滚动500个像素
+
+window.scrollBy(0,-500)　　 向上滚动500个像素
+
+window.scrollBy(500,0)　　   向右滚动500个像素
+
+window.scrollBy(-500,0)　　 向左滚动500个像素
